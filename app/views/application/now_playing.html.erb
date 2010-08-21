@@ -1,0 +1,24 @@
+<style type='text/css'>
+  tr.even { background-color: #eee; }
+  tr.odd  { background-color: #ccc; }
+  select  { width: 49.8%; height: 12em; margin: 1em 0; padding: 0 3px; }
+  table   { width: 100%; }
+</style>
+<p>Hello!</p>
+<p>You are listening to <%= h @track %>
+<%= render :partial => "tracks", :object => @iTunes.play_queue, :locals => { :id => "queue" } %>
+<div>
+  <select name='artist' multiple='multiple' id='select_artist'>
+    <option value='all_artists'>(Все исполнители)</option>
+    <%= @iTunes.library.album_artists.map { |artist| "<option value='#{artist.to_css}'>#{artist}</option>"}.join %>
+  </select>
+
+  <select name='album' multiple='multiple' id='select_album'>
+      <option value='all_albums' class='all_artists'>(Все альбомы)</option>
+      <%= @iTunes.library.albums.map do |album| 
+        "<option value='#{album.to_css}' class='all_artists #{@iTunes.library.album_artist(album).to_css}'>#{album}</option>"
+      end.join %>
+  </select>
+</div>
+<%= render :partial => 'tracks', :object => @iTunes.library.tracks, :locals => { :id => :tracks} %>
+
