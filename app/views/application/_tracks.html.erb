@@ -1,11 +1,19 @@
+<% actions = instance_variable_get("@#{id}_actions") %>
+<% icons = { :play => "►", :remove => "✖", :make_next => "▲", :append => "▼" } %>
 <table id="<%= id %>">
   <thead>
     <tr><th>Название</th><th>Исполнитель</th><th>Альбом</th></tr>
   </thead>
   <tbody>
     <% tracks.each do |track| %>
-      <tr class='all_artists all_albums <%= "#{[track.album.to_css, track.artist.to_css, track.album_artist.to_css].join(" ")} #{cycle :even, :odd}"%>'>
-        <td><%= h track.name %></td>
+      <tr id='track_<%= track.databaseID %>' class='all_artists all_albums <%= "#{[track.album.to_css, track.artist.to_css, track.album_artist.to_css].join(" ")} #{cycle :even, :odd}"%>'>
+        <td><%= h track.name %>
+          <span>
+            <% actions.each do |action| %>
+              <%= link_to icons[action], send("#{action}_song_path", track.databaseID) %>
+            <% end %>
+          </span>
+        </td>
         <td><%= h track.artist %></td>
         <td><%= h track.album %></td>
       </tr>

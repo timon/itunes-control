@@ -3,10 +3,16 @@
   tr.odd  { background-color: #ccc; }
   select  { width: 49.8%; height: 12em; margin: 1em 0; padding: 0 3px; }
   table   { width: 100%; }
+  table span { float: right; margin-right: 3px; }
+  a, a:visited  { text-decoration: none; color: #333; }
+  a:hover, a:active { text-decoration: none; color: #33f; }
 </style>
 <p>Hello!</p>
-<p>You are listening to <%= h @track %>
-<%= render :partial => "tracks", :object => @iTunes.play_queue, :locals => { :id => "queue" } %>
+<p id='current_song'>
+  <%= render :partial => 'current_song' %>
+</p>
+
+<%= render :partial => "tracks", :object => @iTunes.play_queue, :locals => { :id => "upcoming" } %>
 <div>
   <select name='artist' multiple='multiple' id='select_artist'>
     <option value='all_artists'>(Все исполнители)</option>
@@ -20,5 +26,5 @@
       end.join %>
   </select>
 </div>
-<%= render :partial => 'tracks', :object => @iTunes.library.tracks, :locals => { :id => :tracks} %>
+<%= render :partial => 'tracks', :object => @iTunes.library.tracks, :locals => { :id => :library } %>
 

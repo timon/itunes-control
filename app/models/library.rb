@@ -34,23 +34,20 @@ class Library
     @tracks.detect { |lib_track| lib_track.album == album_name }.album_artist.to_s
   end
 
+  def trackWithID(id)
+    track = @library.tracks.filteredArrayUsingPredicate(OSX::NSPredicate.predicateWithFormat("databaseID == #{id}")).first
+    track = Track.new(track) if track
+  end
+
   protected
   def reload_browser!
     return unless @updated_at.nil? || @updated_at < 5.minutes.ago
-    @retry_count = 0
-    begin
-      @tracks = @library.tracks.map { |track| Track.new(track) }.sort
+    bridge_block do
+      @tracks = @library.tracks.map { |track| Track.new(track) }.sort.each(&:readonly!)
       @artists = @tracks.map(&:artist).sort.uniq
       @albums = @tracks.map(&:album).sort.uniq
       @album_artists = @tracks.map(&:album_artist).sort.uniq
       @updated_at = Time.now
-    rescue => e
-      if @retry_count < 1
-        @retry_count += 1
-        retry
-      else
-        raise e
-      end
     end
   end
 end

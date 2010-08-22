@@ -11,8 +11,8 @@ function update_albums() {
     if (!good) missing.push(el);
   });
   $(missing).remove();
-  $('#tracks tbody tr').hide();
-  selected.each(function(i, klass) { $('#tracks tr.' + klass).show()});
+  $('#library tbody tr').hide();
+  selected.each(function(i, klass) { $('#library tr.' + klass).show()});
 }
 
 function update_tracks() {
@@ -24,13 +24,25 @@ function update_tracks() {
     return;
   }
   var missing = [];
-  $('#tracks tbody tr').hide();
-  selected_albums.each(function(i, klass) { $('#tracks tr.' + klass).show()});
+  $('#library tbody tr').hide();
+  selected_albums.each(function(i, klass) { $('#library tr.' + klass).show()});
+}
+
+function newQueue(xhr) {
+  $('#upcoming').replaceWith(xhr.responseText);
+  $('a').attach(Remote.Link, { complete: newQueue })
+}
+
+function updateSong() {
+  $.get('/songs/current', function(data) { $('#current_song').html(data); });
+  $.get('/', function(data) { $('#upcoming').replace(data); $('#upcoming a').attach(Remote.Link, { complete: newQueue}); });
 }
 
 jQuery(function($) {
   window.albums = $($('#select_album').html());
   $('#select_artist').change(update_albums);
   $('#select_album').change(update_tracks);
+  $('a').attach(Remote.Link, { complete: newQueue })
+  setInterval(updateSong, 3000);
 });
 

@@ -1,4 +1,5 @@
 class Track
+  attr_reader :track
   def initialize(iTunesTrack)
     @track = iTunesTrack
   end
@@ -52,6 +53,31 @@ class Track
 
   def inspect
     "<Track: 0x%x %s>" % [object_id, to_s]
+  end
+
+  def readonly!
+    @readonly = true
+  end
+
+  def readonly?
+    @readonly
+  end
+
+  def play
+    @track.playOnce(false)
+  end
+
+  def playNextInDJ
+    iTunes = Itunes.instance
+    currentTracks = iTunes.dj.tracks.to_a.map { |t| Track.new(t) }
+    if iTunes.currentPlaylist.name == iTunes.dj.name && iTunes.currentTrack.name
+      currentPosition = currentTracks.index(iTunes.currentTrack)
+      currentTracks.shift currentPosition.succ if currentPosition
+    end
+    new_track = self.duplicateTo(iTunes.dj)
+    currentTracks.each { |t| t.duplicateTo iTunes.dj }
+    iTunes.dj.tracks.removeObjectsInRange OSX::NSMakeRange(currentPosition.succ, currentTracks.length) if currentPosition
+    new_track
   end
 
   def method_missing(method, *args)

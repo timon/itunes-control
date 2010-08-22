@@ -1,0 +1,8 @@
+<%=
+  case @iTunes.playerState
+  when :playing: "Сейчас играет #{h @track}"
+  when :paused:  "На паузе: #{h @track}"
+  else "iTunes молчит."
+  end 
+%>
+
