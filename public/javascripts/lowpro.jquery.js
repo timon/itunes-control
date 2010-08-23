@@ -181,11 +181,12 @@
   });
 
   Remote.Link = $.klass(Remote.Base, {
-    onclick: function() {
+    onclick: function(e) {
       var options = $.extend({ 
         url: this.element.attr('href'), 
         type: 'GET' 
       }, this.options);
+      e.stopPropagation();
       return this._makeRequest(options);
     }
   });

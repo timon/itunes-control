@@ -30,7 +30,7 @@ function update_tracks() {
 
 function newQueue(xhr) {
   $('#upcoming').replaceWith(xhr.responseText);
-  $('a').attach(Remote.Link, { complete: newQueue })
+  $('#upcoming a').attach(Remote.Link, { complete: newQueue })
 }
 
 function updateSong() {
