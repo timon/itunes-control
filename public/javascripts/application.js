@@ -35,7 +35,7 @@ function newQueue(xhr) {
 
 function updateSong() {
   $.get('/songs/current', function(data) { $('#current_song').html(data); });
-  $.get('/', function(data) { $('#upcoming').replace(data); $('#upcoming a').attach(Remote.Link, { complete: newQueue}); });
+  $.get('/', function(data) { $('#upcoming').replaceWith(data); $('#upcoming a').attach(Remote.Link, { complete: newQueue}); });
 }
 
 jQuery(function($) {
